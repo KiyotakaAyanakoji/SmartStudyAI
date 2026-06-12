@@ -56,12 +56,24 @@ async def upload_document(
         filename=file.filename,
         file_path=file_path,
         page_count=page_count,
-        status="processed"
+        status="processing"
     )
     
     db.add(new_doc)
     db.commit()
     db.refresh(new_doc)
+    
+    # Process PDF and chunk text
+    from app.services.pdf_service import process_pdf
+    from fastapi import BackgroundTasks
+    
+    try:
+        # Currently processing synchronously for simplicity and immediate status updates, 
+        # but could be moved to BackgroundTasks or Celery for larger files.
+        process_pdf(db, new_doc)
+    except Exception as e:
+        # Errors are already logged and status updated to 'error' inside process_pdf
+        pass
     
     return new_doc
 

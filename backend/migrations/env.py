@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.core.database import Base
 from app.models.user import User  # import models to register them with Base
 from app.models.document import Document
+from app.models.chunk import Chunk
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

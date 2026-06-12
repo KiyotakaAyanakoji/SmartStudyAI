@@ -10,3 +10,6 @@ pydantic-settings
 python-multipart
 email-validator
 pypdf
+pymupdf
+langchain-text-splitters
+tiktoken
