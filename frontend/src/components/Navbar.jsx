@@ -25,6 +25,9 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <Link to="/documents" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                  Documents
+                </Link>
                 <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-slate-800 border border-slate-700">
                   <User className="h-4 w-4 text-slate-400" />
                   <span className="text-sm font-medium text-slate-200">{user.full_name || user.email}</span>
