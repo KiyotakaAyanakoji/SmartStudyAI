@@ -13,3 +13,5 @@ pypdf
 pymupdf
 langchain-text-splitters
 tiktoken
+chromadb
+
