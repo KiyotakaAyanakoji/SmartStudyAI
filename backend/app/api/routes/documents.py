@@ -65,12 +65,15 @@ async def upload_document(
     
     # Process PDF and chunk text
     from app.services.pdf_service import process_pdf
+    from app.services.embedding_service import embed_document_chunks
     from fastapi import BackgroundTasks
     
     try:
         # Currently processing synchronously for simplicity and immediate status updates, 
         # but could be moved to BackgroundTasks or Celery for larger files.
         process_pdf(db, new_doc)
+        if new_doc.status == "processed":
+            embed_document_chunks(new_doc.id, current_user.id, db)
     except Exception as e:
         # Errors are already logged and status updated to 'error' inside process_pdf
         pass
@@ -91,6 +94,13 @@ def delete_document(document_id: uuid.UUID, db: SessionDep, current_user: Curren
     # Delete from file system
     if os.path.exists(doc.file_path):
         os.remove(doc.file_path)
+        
+    # Delete embeddings from ChromaDB
+    from app.services.embedding_service import delete_document_embeddings
+    try:
+        delete_document_embeddings(doc.id)
+    except Exception as e:
+        pass # Best effort cleanup
         
     # Delete from DB
     db.delete(doc)

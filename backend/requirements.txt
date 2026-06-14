@@ -14,4 +14,5 @@ pymupdf
 langchain-text-splitters
 tiktoken
 chromadb
+sentence-transformers
 
