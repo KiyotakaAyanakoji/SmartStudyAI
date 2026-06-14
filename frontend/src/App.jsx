@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import DocumentsPage from './pages/DocumentsPage';
+import StudyToolsPage from './pages/StudyToolsPage';
 
 function App() {
   return (
@@ -31,6 +32,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <DocumentsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/study-tools" 
+                element={
+                  <ProtectedRoute>
+                    <StudyToolsPage />
                   </ProtectedRoute>
                 } 
               />

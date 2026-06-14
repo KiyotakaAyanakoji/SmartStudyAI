@@ -1,7 +1,7 @@
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth, documents, search, qa
+from app.api.routes import auth, documents, search, qa, study_tools
 from app.core.config import settings
 
 # Configure basic logging
@@ -28,6 +28,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(documents.router, prefix="/api/documents", tags=["documents"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(qa.router, prefix="/api/qa", tags=["qa"])
+app.include_router(study_tools.router, prefix="/api/tools", tags=["study-tools"])
 
 @app.get("/")
 def read_root():
