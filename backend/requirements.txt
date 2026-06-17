@@ -16,4 +16,11 @@ tiktoken
 chromadb
 sentence-transformers
 google-generativeai
-
+slowapi
+gTTS
+mutagen
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+fastapi-mail

@@ -14,3 +14,4 @@ class Document(Base):
     upload_date = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     status = Column(String, default="processed")
     page_count = Column(Integer, default=0)
+    document_type = Column(String, default="notes")

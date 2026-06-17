@@ -2,11 +2,13 @@ import os
 import uuid
 import shutil
 from typing import List
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status, Form, BackgroundTasks
 from pypdf import PdfReader
 from sqlalchemy.orm import Session
-from app.api.deps import SessionDep, CurrentUser
+from app.api.deps import SessionDep, CurrentUser, get_current_user, get_db
 from app.models.document import Document
+from app.models.user import User
+from app.models.activity_log import ActivityLog
 from app.schemas.document import DocumentResponse
 
 router = APIRouter()
@@ -19,9 +21,11 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/upload", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED)
 async def upload_document(
-    db: SessionDep,
-    current_user: CurrentUser,
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    document_type: str = Form("notes"),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    background_tasks: BackgroundTasks = BackgroundTasks()
 ):
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
@@ -56,10 +60,20 @@ async def upload_document(
         filename=file.filename,
         file_path=file_path,
         page_count=page_count,
-        status="processing"
+        status="processing",
+        document_type=document_type
     )
     
     db.add(new_doc)
+    
+    # Auto-log activity
+    activity = ActivityLog(
+        user_id=current_user.id,
+        activity_type="upload",
+        description=f"Uploaded {file.filename}"
+    )
+    db.add(activity)
+    
     db.commit()
     db.refresh(new_doc)
     
